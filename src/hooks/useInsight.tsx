@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { buildAIPrompt } from '@/data/aiPrompt'
-import type { SimulationRecord } from '@/data/simulation'
+import type { Message, SimulationRecord } from '@/data/simulation'
 import { useSimulationStorage } from '@/hooks/useSimulationStorage'
-import { getInsight, type InsightData } from '@/services/aiService'
+import {
+  getChatResponse,
+  getInsight,
+  type InsightData,
+} from '@/services/aiService'
 
 export const useInsight = (id: string) => {
   const isRequestPending = useRef(false)
-  const { getFormData, updateSimulation } = useSimulationStorage()
+  const { getFormData, updateSimulation, saveMessage } = useSimulationStorage()
 
   const [insight, setInsight] = useState<InsightData | null>(() => {
     const simulation = getFormData(id)
@@ -65,5 +69,36 @@ export const useInsight = (id: string) => {
     fetchInsight(id)
   }, [id, insight, isLoading, error, fetchInsight])
 
-  return { insight, isLoading, error, fetchInsight }
+  const [chatHistory, setChatHistory] = useState<Message[]>(() => {
+    const simulation = getFormData(id)
+    return simulation?.chatHistory || []
+  })
+
+  const sendMessage = async (content: string) => {
+    if (!content.trim()) return
+
+    const userMessage: Message = { role: 'user', content }
+
+    setChatHistory((prev) => [...prev, userMessage])
+
+    saveMessage(id, userMessage)
+
+    setIsLoading(true)
+
+    try {
+      const prompt = `Você é um mentor financeiro. Com base no diagnóstico anterior, o usuário perguntou: ${content}`
+      const aiText = await getChatResponse(prompt)
+
+      const assistantMessage: Message = { role: 'assistant', content: aiText }
+      setChatHistory((prev) => [...prev, assistantMessage])
+
+      saveMessage(id, assistantMessage)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { insight, isLoading, error, fetchInsight, chatHistory, sendMessage }
 }

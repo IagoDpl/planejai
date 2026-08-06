@@ -1,4 +1,5 @@
 import {
+  type Message,
   type SimulationFormData,
   type SimulationRecord,
 } from '@/data/simulation'
@@ -57,5 +58,29 @@ export const useSimulationStorage = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated))
   }
 
-  return { saveFormData, getFormData, updateSimulation, deleteSimulation, getAllSimulations }
+  const saveMessage = (id: string, message: Message) => {
+    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+    const savedData = storage ? (JSON.parse(storage) as SimulationRecord[]) : []
+
+    const updated = savedData.map((record) => {
+      if (record.id === id) {
+        return {
+          ...record,
+          chatHistory: [...(record.chatHistory || []), message],
+        }
+      }
+      return record
+    })
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated))
+  }
+
+  return {
+    saveFormData,
+    getFormData,
+    updateSimulation,
+    deleteSimulation,
+    getAllSimulations,
+    saveMessage,
+  }
 }

@@ -53,3 +53,9 @@ export const getInsight = async (prompt: string) => {
   const json = response.candidates[0].content.parts[0].text
   return JSON.parse(json) as InsightData
 }
+
+export const getChatResponse = async (prompt: string): Promise<string> => {
+  const response = await callGeminiAPI(prompt)
+  const textResponse = response.candidates[0].content.parts[0].text
+  return textResponse
+}
