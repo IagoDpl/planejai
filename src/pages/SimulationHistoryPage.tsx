@@ -1,4 +1,4 @@
-import { Goal, Trash2 } from 'lucide-react'
+import { ExternalLink, Goal, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,77 +9,139 @@ import { useSimulationStorage } from '@/hooks/useSimulationStorage'
 
 export function SimulationHistoryPage() {
   const navigate = useNavigate()
-  // Pegamos as funções que criamos no hook
   const { getAllSimulations, deleteSimulation } = useSimulationStorage()
 
-  // Estado para armazenar as simulações na tela
-  const [simulations, setSimulations] = useState<SimulationRecord[]>(() => {
-    const data = getAllSimulations()
-    return data
-  })
+  const [simulations, setSimulations] = useState<SimulationRecord[]>(() =>
+    getAllSimulations(),
+  )
 
   const handleDelete = (id: string) => {
-    deleteSimulation(id) // Apaga do banco (localStorage)
-    setSimulations((prev) => prev.filter((item) => item.id !== id)) // Atualiza a tela com a nova lista
+    deleteSimulation(id)
+    setSimulations((prev) => prev.filter((item) => item.id !== id))
   }
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10">
-      <PageHero title="Histórico" subtitle="Suas metas salvas" />
+    <main className="max-w-1280px mx-auto flex min-h-screen w-full flex-col items-start gap-6 px-6 py-10">
+      <PageHero
+        title="Histórico de simulações"
+        subtitle="Com base no seu perfil financeiro e objetivos."
+      />
 
-      <div className="flex flex-col gap-4">
-        {simulations.map((item) => (
-          <div
-            key={item.id}
-            className="bg-card border-border hover:border-primary/30 rounded-24px flex flex-col border p-5 shadow-sm transition-all"
-          >
-            <div className="mb-6 flex items-start justify-between">
-              <div className="bg-primary/10 rounded-xl p-3">
-                <Goal size={24} className="text-primary" />
-              </div>
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="text-muted-foreground p-1 transition-colors hover:text-red-500"
-                aria-label="Excluir simulação"
+      {simulations.length === 0 ? (
+        <div className="flex w-full flex-col items-center justify-center gap-4 py-20 text-center">
+          <p className="text-muted-foreground">Nenhuma simulação encontrada.</p>
+          <Button variant="primary" onClick={() => navigate('/')}>
+            Criar primeira simulação
+          </Button>
+        </div>
+      ) : (
+        <div className="flex w-full flex-wrap justify-center gap-8 md:justify-start">
+          {simulations.map((item) => {
+            const amount = Number(item.goalAmount.replace(/\D/g, '')) / 100
+            const deadline = Number(item.goalDeadline)
+            const monthlySavings = (amount / deadline).toLocaleString('pt-BR', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+
+            return (
+              <div
+                key={item.id}
+                style={{ width: 354, height: 434, borderRadius: 22 }}
+                className="bg-card border-border relative flex shrink-0 flex-col gap-6 border p-8 shadow-lg transition-transform hover:scale-[1.02]"
               >
-                <Trash2 size={18} />
-              </button>
-            </div>
+                <div
+                  style={{ width: 40, height: 40, borderRadius: 10.67 }}
+                  className="bg-primary/10 flex shrink-0 items-center justify-center"
+                >
+                  <Goal size={26} className="text-primary" />
+                </div>
 
-            <div className="mb-6">
-              <h3 className="text-1 text-muted-foreground mt-1 truncate font-bold">
-                {item.goalName}
-              </h3>
-            </div>
+                <div
+                  style={{ width: 190, height: 40 }}
+                  className="flex flex-col justify-center gap-1"
+                >
+                  <h3 className="text-foreground truncate text-base leading-tight font-semibold">
+                    {item.goalName}
+                  </h3>
+                  <span className="text-muted-foreground text-sm leading-tight font-normal">
+                    06/08/2026
+                  </span>
+                </div>
 
-            <div className="mb-8 grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-10px text-muted-foreground font-bold uppercase">
-                  custo da meta
-                </span>
-                <p className="text-foreground text-sm font-semibold">
-                  R$ {item.goalAmount}
-                </p>
+                <div className="flex flex-col gap-6">
+                  <div
+                    style={{ width: 190, height: 38 }}
+                    className="flex flex-col justify-center gap-1"
+                  >
+                    <span className="text-muted-foreground text-xs font-semibold uppercase">
+                      Custo da meta
+                    </span>
+                    <p className="text-foreground text-base font-semibold">
+                      R$ {item.goalAmount}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{ width: 190, height: 38 }}
+                    className="flex flex-col justify-center gap-1"
+                  >
+                    <span className="text-muted-foreground text-xs font-semibold uppercase">
+                      Prazo
+                    </span>
+                    <p className="text-foreground text-base font-semibold">
+                      {item.goalDeadline} meses
+                    </p>
+                  </div>
+
+                  <div
+                    style={{ width: 190, height: 38 }}
+                    className="flex flex-col justify-center gap-1"
+                  >
+                    <span className="text-muted-foreground text-xs font-semibold uppercase">
+                      Economia mensal
+                    </span>
+                    <p className="text-foreground text-base font-semibold">
+                      R$ {monthlySavings}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  style={{ width: 290 }}
+                  className="border-border mt-auto h-0 self-center border-t"
+                />
+
+                <div
+                  style={{ width: 290, height: 32 }}
+                  className="flex items-center justify-between self-center"
+                >
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="flex items-center gap-2 text-xs font-medium text-red-500 transition-opacity hover:opacity-70"
+                  >
+                    <Trash2 size={20} />
+                    <span>Excluir</span>
+                  </button>
+
+                  <div className="border-border h-8 border-l" />
+
+                  <button
+                    onClick={() => navigate(`/resultado/${item.id}`)}
+                    style={{ width: 128, height: 32, borderRadius: 16 }}
+                    className="border-foreground dark:border-primary-foreground text-foreground hover:bg-foreground hover:text-background flex items-center justify-center gap-2 border transition-all"
+                  >
+                    <ExternalLink size={16} />
+                    <span className="text-xs font-normal whitespace-nowrap">
+                      Ver detalhes
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div>
-                <span className="text-10px text-muted-foreground font-bold uppercase">
-                  Prazo
-                </span>
-                <p className="text-foreground text-sm font-semibold">
-                  {item.goalDeadline} meses
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="secondary"
-              className="rounded-x1 w-full justify-center py-6 font-bold"
-              onClick={() => navigate(`/resultado/${item.id}`)}
-            >
-              Ver Detalhes
-            </Button>
-          </div>
-        ))}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </main>
   )
 }
