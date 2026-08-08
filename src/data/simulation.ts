@@ -97,6 +97,7 @@ export type SimulationRecord = SimulationFormData & {
   id: string
   insight?: InsightData
   chatHistory?: Message[]
+  createdAt?: string
 }
 
 export type Message = {

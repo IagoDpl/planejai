@@ -83,7 +83,7 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
       </div>
       <div className="flex gap-2 border-t pt-4">
         <textarea
-          className="bg-input ring-primary flex-1 rounded-lg border-none p-3 focus:ring-1"
+          className="bg-input ring-primary flex-1 rounded-lg border-none focus:ring-1"
           placeholder="tire suas dúvidas com o mentor..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
