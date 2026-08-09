@@ -72,7 +72,7 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
             className={`flex w-full min-w-0 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`inline-block max-w-[85%] rounded-xl p-3 wrap-break-word whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-white' : 'bg-secondary'}`}
+              className={`inline-block max-w-[85%] rounded-xl p-3 wrap-break-word whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-white shadow-sm' : 'bg-secondary-button text-muted-foreground border-border border text-base leading-relaxed shadow-sm'}`}
             >
               {message.content}
             </div>
@@ -83,7 +83,7 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
       </div>
       <div className="flex gap-2 border-t pt-4">
         <textarea
-          className="bg-input ring-primary flex-1 rounded-lg border-none focus:ring-1"
+          className="bg-input ring-primary flex-1 rounded-lg border focus:ring-1"
           placeholder="tire suas dúvidas com o mentor..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
