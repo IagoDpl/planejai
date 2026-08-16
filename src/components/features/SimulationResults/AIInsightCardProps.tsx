@@ -72,7 +72,7 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
             className={`flex w-full min-w-0 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`inline-block max-w-[85%] rounded-xl p-3 wrap-break-word whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-white shadow-sm' : 'bg-secondary-button text-muted-foreground text-base leading-relaxed shadow-sm'}`}
+              className={`inline-block max-w-[85%] rounded-xl p-3 wrap-break-word whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-white shadow-sm' : 'bg-secondary-button border-border text-muted-foreground border text-base leading-relaxed shadow-sm'}`}
             >
               {message.content}
             </div>
