@@ -4,6 +4,8 @@ O **Planej.ai** é uma aplicação web de planejamento financeiro pessoal. O usu
 
 Tudo funciona diretamente no navegador: sem backend, sem banco de dados remoto. Os dados são salvos no `localStorage` e as análises são geradas em tempo real pela API do Google Gemini.
 
+Peça conselhos para a IA após a análise financeira de seus gastos e rendimentos, para obter uma avaliação personalizada e planejamentos com ajuda do Gemini.
+
 ---
 
 ## Stacks do Projeto
@@ -35,6 +37,4 @@ Tudo funciona diretamente no navegador: sem backend, sem banco de dados remoto. 
 | `prettier-plugin-tailwindcss`      | ^0.7.2  | Ordenação automática de classes Tailwind |
 
 ---
-
-## Estrutura de Pastas
 
