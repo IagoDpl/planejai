@@ -38,3 +38,11 @@ Peça conselhos para a IA após a análise financeira de seus gastos e rendiment
 
 ---
 
+Após baixar, para instalar rode o comando no terminal:
+ npm i
+
+Para iniciar, rode o comando:
+npm run dev
+
+
+
